@@ -51,6 +51,17 @@
   --transition-bounce: all 0.36s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+/* Dawn / Sunrise Mode Theme Tokens */
+body[data-theme="dawn"] {
+  --color-primary: #f472b6;
+  --color-primary-glow: rgba(244, 114, 182, 0.45);
+  --color-accent: #fbbf24;
+  --text-pure: #ffffff;
+  --text-main: #fdf2f8;
+  --text-muted: #fbcfe8;
+  --text-dim: #cbd5e1;
+}
+
 /* Day Mode Theme Tokens */
 body[data-theme="day"] {
   --color-primary: #38bdf8;
@@ -62,8 +73,9 @@ body[data-theme="day"] {
   --text-dim: #cbd5e1;
 }
 
-/* Sunset / Golden Hour Mode */
-body[data-theme="sunset"] {
+/* Sunset / Evening / Golden Hour Mode */
+body[data-theme="sunset"],
+body[data-theme="evening"] {
   --color-primary: #fbbf24;
   --color-primary-glow: rgba(251, 191, 36, 0.45);
   --color-accent: #fb7185;
@@ -146,6 +158,7 @@ button {
   transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
   filter: none; /* Razor-sharp room backdrop - 100% visible */
   will-change: opacity;
+  z-index: 0;
 }
 
 .layer-dawn {
@@ -167,13 +180,41 @@ button {
 
 .room-layer.active {
   opacity: 1;
+  z-index: 1;
 }
 
-/* Dynamic Environmental Tint Overlay (shifts atmospheric hue based on weather & time) */
+/* Dynamic Lighting Tint Overlay (shifts atmospheric hue based on time of day) */
+.time-tint-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  transition: background 1.2s ease;
+  mix-blend-mode: overlay;
+}
+
+body[data-theme="dawn"] .time-tint-overlay {
+  background: radial-gradient(circle at 50% 45%, rgba(244, 114, 182, 0.22), rgba(251, 191, 36, 0.14), rgba(30, 27, 75, 0.25));
+}
+
+body[data-theme="day"] .time-tint-overlay {
+  background: radial-gradient(circle at 50% 30%, rgba(254, 240, 138, 0.12), rgba(0, 0, 0, 0.12));
+}
+
+body[data-theme="evening"] .time-tint-overlay,
+body[data-theme="sunset"] .time-tint-overlay {
+  background: radial-gradient(circle at 50% 50%, rgba(249, 115, 22, 0.25), rgba(24, 9, 20, 0.35));
+}
+
+body[data-theme="night"] .time-tint-overlay {
+  background: radial-gradient(circle at 50% 50%, rgba(30, 58, 138, 0.25), rgba(3, 7, 18, 0.45));
+}
+
+/* Dynamic Environmental Weather Tint Overlay (shifts atmospheric hue based on weather) */
 .weather-tint-overlay {
   position: absolute;
   inset: 0;
-  z-index: 1;
+  z-index: 3;
   pointer-events: none;
   transition: background 1.2s ease;
   mix-blend-mode: overlay;
@@ -181,51 +222,33 @@ button {
 
 /* Seasonal & Weather Tints */
 body[data-weather="summer"] .weather-tint-overlay {
-  background: radial-gradient(circle at 50% 30%, rgba(251, 191, 36, 0.22), rgba(245, 158, 11, 0.08), rgba(0, 0, 0, 0.2));
+  background: radial-gradient(circle at 50% 30%, rgba(251, 191, 36, 0.25), rgba(245, 158, 11, 0.1), rgba(0, 0, 0, 0.15));
 }
 
 body[data-weather="monsoon"] .weather-tint-overlay {
-  background: radial-gradient(circle at 50% 40%, rgba(14, 116, 144, 0.28), rgba(15, 23, 42, 0.48));
+  background: radial-gradient(circle at 50% 40%, rgba(14, 116, 144, 0.32), rgba(15, 23, 42, 0.55));
 }
 
 body[data-weather="spring"] .weather-tint-overlay {
-  background: radial-gradient(circle at 50% 40%, rgba(244, 114, 182, 0.2), rgba(251, 207, 232, 0.08), rgba(15, 23, 42, 0.22));
+  background: radial-gradient(circle at 50% 40%, rgba(244, 114, 182, 0.22), rgba(251, 207, 232, 0.1), rgba(15, 23, 42, 0.2));
 }
 
 body[data-weather="winter"] .weather-tint-overlay {
-  background: radial-gradient(circle at 50% 40%, rgba(186, 230, 253, 0.22), rgba(224, 242, 254, 0.08), rgba(8, 14, 28, 0.42));
+  background: radial-gradient(circle at 50% 40%, rgba(186, 230, 253, 0.25), rgba(224, 242, 254, 0.1), rgba(8, 14, 28, 0.38));
 }
 
 /* Backwards compatibility weather tints */
-body[data-weather="rain"] .weather-tint-overlay {
-  background: radial-gradient(circle at 50% 40%, rgba(14, 116, 144, 0.28), rgba(15, 23, 42, 0.48));
-}
+body[data-weather="rain"] .weather-tint-overlay,
 body[data-weather="thunder"] .weather-tint-overlay {
-  background: radial-gradient(circle at 50% 40%, rgba(30, 27, 75, 0.35), rgba(2, 6, 23, 0.55));
+  background: radial-gradient(circle at 50% 40%, rgba(14, 116, 144, 0.32), rgba(15, 23, 42, 0.55));
 }
+
 body[data-weather="snow"] .weather-tint-overlay {
-  background: radial-gradient(circle at 50% 40%, rgba(186, 230, 253, 0.22), rgba(8, 14, 28, 0.42));
+  background: radial-gradient(circle at 50% 40%, rgba(186, 230, 253, 0.25), rgba(8, 14, 28, 0.38));
 }
+
 body[data-weather="clear"] .weather-tint-overlay {
-  background: radial-gradient(circle at 50% 30%, rgba(254, 240, 138, 0.14), rgba(0, 0, 0, 0.2));
-}
-
-/* Sky & Time-of-Day Ambient Tone Shifts */
-body[data-theme="dawn"] .weather-tint-overlay {
-  background: radial-gradient(circle at 50% 45%, rgba(244, 114, 182, 0.2), rgba(251, 191, 36, 0.12), rgba(30, 27, 75, 0.28));
-}
-
-body[data-theme="day"] .weather-tint-overlay {
-  background: radial-gradient(circle at 50% 30%, rgba(254, 240, 138, 0.12), rgba(0, 0, 0, 0.18));
-}
-
-body[data-theme="evening"] .weather-tint-overlay,
-body[data-theme="sunset"] .weather-tint-overlay {
-  background: radial-gradient(circle at 50% 50%, rgba(249, 115, 22, 0.22), rgba(24, 9, 20, 0.38));
-}
-
-body[data-theme="night"] .weather-tint-overlay {
-  background: radial-gradient(circle at 50% 50%, rgba(30, 58, 138, 0.25), rgba(3, 7, 18, 0.5));
+  background: radial-gradient(circle at 50% 30%, rgba(254, 240, 138, 0.14), rgba(0, 0, 0, 0.15));
 }
 
 /* Fullscreen Dynamic Canvas (Moving clouds, rain, thunder flashes, snow, twinkling stars) */
@@ -234,7 +257,7 @@ body[data-theme="night"] .weather-tint-overlay {
   inset: 0;
   width: 100%;
   height: 100%;
-  z-index: 2;
+  z-index: 4;
   pointer-events: none;
 }
 
@@ -243,7 +266,7 @@ body[data-theme="night"] .weather-tint-overlay {
   position: absolute;
   inset: 0;
   background: rgba(255, 255, 255, 0);
-  z-index: 3;
+  z-index: 5;
   pointer-events: none;
   transition: background 0.08s ease;
 }
@@ -256,6 +279,10 @@ body[data-theme="night"] .weather-tint-overlay {
 .ambient-room-vignette {
   position: absolute;
   inset: 0;
+  background: radial-gradient(circle at 50% 45%, rgba(0, 0, 0, 0) 55%, rgba(2, 4, 10, 0.38) 100%);
+  z-index: 6;
+  pointer-events: none;
+}
   background: radial-gradient(circle at 50% 45%, rgba(0, 0, 0, 0) 55%, rgba(2, 4, 10, 0.38) 100%);
   z-index: 4;
   pointer-events: none;
@@ -574,8 +601,9 @@ body[data-theme="night"] .weather-tint-overlay {
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.55);
+  background: rgba(0, 0, 0, 0.65);
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: var(--text-pure);
   display: flex;
@@ -583,6 +611,15 @@ body[data-theme="night"] .weather-tint-overlay {
   justify-content: center;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
   transition: var(--transition-smooth);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(12px);
+}
+
+.scroll-top-btn.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
 }
 
 .scroll-top-btn:hover {
@@ -629,8 +666,10 @@ body[data-theme="night"] .weather-tint-overlay {
   flex-shrink: 0;
 }
 
+.toast-content,
 .toast-body {
   flex: 1;
+  min-width: 0;
 }
 
 .toast-title {

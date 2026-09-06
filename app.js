@@ -13,178 +13,17 @@ document.addEventListener('DOMContentLoaded', () => {
   'use strict';
 
   // -------------------------------------------------------------------------
-  // 1. DOM Elements Querying
-  // -------------------------------------------------------------------------
-  const viewportDeck = document.getElementById('viewport-deck');
-  const sections = Array.from(document.querySelectorAll('.screen-section'));
-  const navMenu = document.getElementById('nav-menu');
-  const navItems = Array.from(document.querySelectorAll('.nav-item'));
-  const mobileToggle = document.getElementById('mobile-toggle');
-  const sideDots = Array.from(document.querySelectorAll('.side-dot'));
-  const sideTrackerNum = document.getElementById('side-tracker-num');
-  const btnPrev = document.getElementById('btn-prev-section');
-  const btnNext = document.getElementById('btn-next-section');
-
-  // Lighting & Theme Elements
-  const layerDawn = document.getElementById('layer-dawn');
-  const layerDay = document.getElementById('layer-day');
-  const layerEvening = document.getElementById('layer-evening') || document.getElementById('layer-sunset');
-  const layerNight = document.getElementById('layer-night');
-  const liveClockEl = document.getElementById('live-clock');
-  const timeModeIcon = document.getElementById('time-mode-icon');
-  const timeWidget = document.getElementById('time-widget');
-  const cycleTimeBtn = document.getElementById('cycle-time-btn');
-  const realtimeStatusPill = document.getElementById('realtime-status-pill');
-
-  // Weather Elements
-  const weatherBtn = document.getElementById('weather-control-btn');
-  const weatherLabelText = document.getElementById('weather-label-text');
-  const weatherBtnIcon = document.getElementById('weather-btn-icon');
-  const weatherCanvas = document.getElementById('weather-canvas');
-  const lightningFlash = document.getElementById('lightning-flash');
-
-  // Funny Toast Elements
-  const funnyToast = document.getElementById('funny-weather-toast');
-  const toastIcon = document.getElementById('toast-icon');
-  const toastTitle = document.getElementById('toast-title');
-  const toastQuote = document.getElementById('toast-quote');
-  const toastClose = document.getElementById('toast-close');
-
-  // Modal Elements
-  const cvModal = document.getElementById('cv-modal');
-  const btnDownloadCv = document.getElementById('btn-download-cv');
-  const btnPreviewCv = document.getElementById('btn-preview-cv');
-  const btnCloseCvModal = document.getElementById('btn-close-cv-modal');
-  const cvModalBackdrop = document.getElementById('cv-modal-backdrop');
-  const btnPrintCv = document.getElementById('btn-print-cv');
-  const btnModalDownloadCv = document.getElementById('btn-modal-download-cv');
-
-  // Cert Modal Elements
-  const certModal = document.getElementById('cert-modal');
-  const btnCloseCertModal = document.getElementById('btn-close-cert-modal');
-  const certModalBackdrop = document.getElementById('cert-modal-backdrop');
-  const btnDismissCertModal = document.getElementById('btn-dismiss-cert-modal');
-  const certModalName = document.getElementById('cert-modal-name');
-  const certModalIssuer = document.getElementById('cert-modal-issuer');
-  const certModalId = document.getElementById('cert-modal-id');
-  const certModalImg = document.getElementById('cert-modal-img');
-
-  // Contact Form Elements
-  const contactForm = document.getElementById('contact-form');
-  const feedbackBanner = document.getElementById('form-feedback-banner');
-
-  // -------------------------------------------------------------------------
-  // 2. Real-Time Dawn / Day / Evening / Night Lighting Engine
+  // 1. Core Data & Theme Constants (Declared first to avoid TDZ errors)
   // -------------------------------------------------------------------------
   const THEMES = ['dawn', 'day', 'evening', 'night'];
-  let currentThemeIndex = 1; // Default to day initially
-  let manualThemeOverride = false;
 
-  function determineRealtimeTheme() {
-    const now = new Date();
-    const hour = now.getHours();
+  const THEME_DATA = {
+    dawn: { icon: '🌅', name: 'DAWN', label: 'Dawn / Sunrise', desc: 'Soft pastel sunrise illuminated across the window & room sky.' },
+    day: { icon: '☀️', name: 'DAYLIGHT', label: 'Daylight Mode', desc: 'Bright, high-clarity daylight pouring through the panoramic window.' },
+    evening: { icon: '🌇', name: 'EVENING', label: 'Golden Evening', desc: 'Warm amber sunset glow casting golden reflections across the room.' },
+    night: { icon: '🌙', name: 'NIGHT', label: 'Midnight Cozy Mode', desc: 'Serene midnight anime atmosphere with glittering stars and city lights.' }
+  };
 
-    // 05:00 - 07:59: Dawn / Sunrise
-    // 08:00 - 16:59: Day
-    // 17:00 - 19:59: Evening / Sunset
-    // 20:00 - 04:59: Night
-    if (hour >= 5 && hour < 8) {
-      return 'dawn';
-    } else if (hour >= 8 && hour < 17) {
-      return 'day';
-    } else if (hour >= 17 && hour < 20) {
-      return 'evening';
-    } else {
-      return 'night';
-    }
-  }
-
-  function applyTheme(themeName, isManual = false) {
-    document.body.setAttribute('data-theme', themeName);
-
-    // Crossfade scenic room backdrop layers
-    if (layerDawn) layerDawn.classList.toggle('active', themeName === 'dawn');
-    if (layerDay) layerDay.classList.toggle('active', themeName === 'day');
-    if (layerEvening) layerEvening.classList.toggle('active', themeName === 'evening' || themeName === 'sunset');
-    if (layerNight) layerNight.classList.toggle('active', themeName === 'night');
-
-    // Update icons & status pill
-    let icon = '🌅';
-    let label = 'Dawn / Sunrise';
-    if (themeName === 'day') {
-      icon = '☀️';
-      label = 'Daylight Mode';
-    } else if (themeName === 'evening' || themeName === 'sunset') {
-      icon = '🌇';
-      label = 'Golden Evening';
-    } else if (themeName === 'night') {
-      icon = '🌙';
-      label = 'Midnight Cozy Mode';
-    }
-
-    if (timeModeIcon) timeModeIcon.textContent = icon;
-    if (realtimeStatusPill) {
-      realtimeStatusPill.textContent = `${label} • ${isManual ? 'Manual Override' : 'Real-Time Synced'}`;
-    }
-
-    currentThemeIndex = THEMES.indexOf(themeName);
-    if (currentThemeIndex === -1) currentThemeIndex = 0;
-
-    // Refresh sky & weather elements to match new time-of-day lighting
-    if (typeof refreshAtmosphere === 'function') {
-      refreshAtmosphere();
-    }
-  }
-
-  function updateClock() {
-    const now = new Date();
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    const seconds = String(now.getSeconds()).padStart(2, '0');
-    if (liveClockEl) {
-      liveClockEl.textContent = `${hours}:${minutes}:${seconds}`;
-    }
-
-    // Auto-update theme if user hasn't manually overridden it
-    if (!manualThemeOverride) {
-      const detected = determineRealtimeTheme();
-      if (document.body.getAttribute('data-theme') !== detected) {
-        applyTheme(detected, false);
-      }
-    }
-  }
-
-  // Initialize clock & auto-theme
-  updateClock();
-  setInterval(updateClock, 1000);
-
-  // Allow clicking on reload button or time widget to cycle Dawn -> Day -> Evening -> Night
-  function cycleLightingMode() {
-    manualThemeOverride = true;
-    currentThemeIndex = (currentThemeIndex + 1) % THEMES.length;
-    const nextTheme = THEMES[currentThemeIndex];
-    applyTheme(nextTheme, true);
-
-    const themeMeta = {
-      dawn: { icon: '🌅', name: 'DAWN', desc: 'Soft pastel sunrise illuminated across the window & room sky.' },
-      day: { icon: '☀️', name: 'DAYLIGHT', desc: 'Bright, high-clarity daylight pouring through the panoramic window.' },
-      evening: { icon: '🌇', name: 'EVENING', desc: 'Warm amber sunset glow casting golden reflections across the room.' },
-      night: { icon: '🌙', name: 'NIGHT', desc: 'Serene midnight anime atmosphere with glittering stars and city lights.' }
-    };
-
-    const info = themeMeta[nextTheme] || { icon: '✨', name: nextTheme.toUpperCase(), desc: 'Window sky shifted.' };
-    showToast(info.icon, `Sky Mode: ${info.name}`, info.desc);
-  }
-
-  if (cycleTimeBtn) cycleTimeBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    cycleLightingMode();
-  });
-  if (timeWidget) timeWidget.addEventListener('click', cycleLightingMode);
-
-  // -------------------------------------------------------------------------
-  // 3. Seasonal Weather Control & Panoramic Window Simulation Engine
-  // -------------------------------------------------------------------------
   const WEATHER_MODES = [
     {
       id: 'summer',
@@ -228,15 +67,173 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   ];
 
-  let currentWeatherIndex = 0; // Starts with Summer
+  let currentThemeIndex = 1;
+  let manualThemeOverride = false;
+  let currentWeatherIndex = 0;
+  let toastTimeout = null;
   let weatherAnimationId = null;
   let particles = [];
-  let droplets = []; // Glass window trickling droplets
-  let clouds = []; // Anime sky clouds
-  let meteors = []; // Night shooting stars
-  let splashes = []; // Rain surface splashes
-  let nightStars = []; // Midnight sky stars
+  let droplets = [];
+  let clouds = [];
+  let meteors = [];
+  let splashes = [];
+  let nightStars = [];
 
+  // -------------------------------------------------------------------------
+  // 2. DOM Elements Querying
+  // -------------------------------------------------------------------------
+  const sections = Array.from(document.querySelectorAll('.content-section, .screen-section'));
+  const navMenu = document.getElementById('nav-menu');
+  const navItems = Array.from(document.querySelectorAll('.nav-item'));
+  const mobileToggle = document.getElementById('mobile-toggle');
+  const sideDots = Array.from(document.querySelectorAll('.side-dot'));
+  const sideTrackerNum = document.getElementById('side-tracker-num');
+  const btnPrev = document.getElementById('btn-prev-section');
+  const btnNext = document.getElementById('btn-next-section');
+  const scrollTopBtn = document.getElementById('scroll-top-btn');
+
+  // Lighting & Theme Elements
+  const layerDawn = document.getElementById('layer-dawn');
+  const layerDay = document.getElementById('layer-day');
+  const layerEvening = document.getElementById('layer-evening') || document.getElementById('layer-sunset');
+  const layerNight = document.getElementById('layer-night');
+  const liveClockEl = document.getElementById('live-clock');
+  const timeModeIcon = document.getElementById('time-mode-icon');
+  const timeWidget = document.getElementById('time-widget');
+  const cycleTimeBtn = document.getElementById('cycle-time-btn');
+  const themeToggle = document.getElementById('theme-toggle');
+  const realtimeStatusPill = document.getElementById('realtime-status-pill');
+
+  // Weather Elements
+  const weatherBtn = document.getElementById('weather-control-btn');
+  const weatherToggle = document.getElementById('weather-toggle');
+  const weatherLabelText = document.getElementById('weather-label-text');
+  const weatherBtnIcon = document.getElementById('weather-btn-icon');
+  const weatherCanvas = document.getElementById('weather-canvas');
+  const lightningFlash = document.getElementById('lightning-flash');
+
+  // Funny Toast Elements
+  const funnyToast = document.getElementById('funny-weather-toast');
+  const toastIcon = document.getElementById('toast-icon');
+  const toastTitle = document.getElementById('toast-title');
+  const toastQuote = document.getElementById('toast-quote');
+  const toastClose = document.getElementById('toast-close');
+
+  // Modal Elements
+  const cvModal = document.getElementById('cv-modal');
+  const btnDownloadCv = document.getElementById('btn-download-cv');
+  const btnPreviewCv = document.getElementById('btn-preview-cv');
+  const btnCloseCvModal = document.getElementById('btn-close-cv-modal');
+  const cvModalBackdrop = document.getElementById('cv-modal-backdrop');
+  const btnPrintCv = document.getElementById('btn-print-cv');
+  const btnModalDownloadCv = document.getElementById('btn-modal-download-cv');
+
+  // Cert Modal Elements
+  const certModal = document.getElementById('cert-modal');
+  const btnCloseCertModal = document.getElementById('btn-close-cert-modal');
+  const certModalBackdrop = document.getElementById('cert-modal-backdrop');
+  const btnDismissCertModal = document.getElementById('btn-dismiss-cert-modal');
+  const certModalName = document.getElementById('cert-modal-name');
+  const certModalIssuer = document.getElementById('cert-modal-issuer');
+  const certModalId = document.getElementById('cert-modal-id');
+  const certModalImg = document.getElementById('cert-modal-img');
+
+  // Contact Form Elements
+  const contactForm = document.getElementById('contact-form');
+  const feedbackBanner = document.getElementById('form-feedback-banner');
+
+  // -------------------------------------------------------------------------
+  // 3. Real-Time Dawn / Day / Evening / Night Lighting Engine
+  // -------------------------------------------------------------------------
+  function determineRealtimeTheme() {
+    const now = new Date();
+    const hour = now.getHours();
+
+    // 05:00 - 07:59: Dawn / Sunrise
+    // 08:00 - 16:59: Day
+    // 17:00 - 19:59: Evening / Sunset
+    // 20:00 - 04:59: Night
+    if (hour >= 5 && hour < 8) {
+      return 'dawn';
+    } else if (hour >= 8 && hour < 17) {
+      return 'day';
+    } else if (hour >= 17 && hour < 20) {
+      return 'evening';
+    } else {
+      return 'night';
+    }
+  }
+
+  function applyTheme(themeName, isManual = false) {
+    document.body.setAttribute('data-theme', themeName);
+
+    // Crossfade scenic room backdrop layers
+    if (layerDawn) layerDawn.classList.toggle('active', themeName === 'dawn');
+    if (layerDay) layerDay.classList.toggle('active', themeName === 'day');
+    if (layerEvening) layerEvening.classList.toggle('active', themeName === 'evening' || themeName === 'sunset');
+    if (layerNight) layerNight.classList.toggle('active', themeName === 'night');
+
+    const meta = THEME_DATA[themeName] || { icon: '✨', label: themeName, name: themeName.toUpperCase(), desc: '' };
+
+    if (timeModeIcon) timeModeIcon.textContent = meta.icon;
+    if (realtimeStatusPill) {
+      realtimeStatusPill.textContent = `${meta.label} • ${isManual ? 'Manual Override' : 'Real-Time Synced'}`;
+    }
+
+    currentThemeIndex = THEMES.indexOf(themeName);
+    if (currentThemeIndex === -1) currentThemeIndex = 0;
+
+    // Refresh sky & weather elements to match new time-of-day lighting
+    if (typeof refreshAtmosphere === 'function') {
+      refreshAtmosphere();
+    }
+  }
+
+  function updateClock() {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    if (liveClockEl) {
+      liveClockEl.textContent = `${hours}:${minutes}:${seconds}`;
+    }
+
+    // Auto-update theme if user hasn't manually overridden it
+    if (!manualThemeOverride) {
+      const detected = determineRealtimeTheme();
+      if (document.body.getAttribute('data-theme') !== detected) {
+        applyTheme(detected, false);
+      }
+    }
+  }
+
+  // Initialize clock & auto-theme
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  // Allow clicking on reload button or time widget to cycle Dawn -> Day -> Evening -> Night
+  function cycleLightingMode() {
+    manualThemeOverride = true;
+    currentThemeIndex = (currentThemeIndex + 1) % THEMES.length;
+    const nextTheme = THEMES[currentThemeIndex];
+    applyTheme(nextTheme, true);
+
+    const info = THEME_DATA[nextTheme] || { icon: '✨', name: nextTheme.toUpperCase(), desc: 'Window sky shifted.' };
+    showToast(info.icon, `Sky Mode: ${info.name}`, info.desc);
+  }
+
+  if (cycleTimeBtn) {
+    cycleTimeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      cycleLightingMode();
+    });
+  }
+  if (timeWidget) timeWidget.addEventListener('click', cycleLightingMode);
+  if (themeToggle) themeToggle.addEventListener('click', cycleLightingMode);
+
+  // -------------------------------------------------------------------------
+  // 4. Seasonal Weather Control & Panoramic Window Simulation Engine
+  // -------------------------------------------------------------------------
   // Canvas Setup
   const ctx = weatherCanvas ? weatherCanvas.getContext('2d') : null;
 
@@ -670,9 +667,11 @@ document.addEventListener('DOMContentLoaded', () => {
   if (weatherBtn) {
     weatherBtn.addEventListener('click', cycleWeather);
   }
+  if (weatherToggle) {
+    weatherToggle.addEventListener('click', cycleWeather);
+  }
 
   // Toast Functionality
-  let toastTimeout = null;
   function showToast(icon, title, quote) {
     if (!funnyToast) return;
     if (toastIcon) toastIcon.textContent = icon;
@@ -792,8 +791,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ScrollSpy with IntersectionObserver
   const observerOptions = {
-    root: viewportDeck,
-    threshold: 0.55
+    root: null,
+    threshold: 0.35
   };
 
   const sectionObserver = new IntersectionObserver((entries) => {
@@ -806,6 +805,22 @@ document.addEventListener('DOMContentLoaded', () => {
   }, observerOptions);
 
   sections.forEach((sec) => sectionObserver.observe(sec));
+
+  // Scroll-to-Top Floating Button
+  if (scrollTopBtn) {
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 350) {
+        scrollTopBtn.classList.add('visible');
+      } else {
+        scrollTopBtn.classList.remove('visible');
+      }
+    }, { passive: true });
+
+    scrollTopBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
 
   // -------------------------------------------------------------------------
   // 5. Interactive CV Modal & Download Handlers
