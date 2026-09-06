@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Durgadas Karmakar | Backend Developer &amp; Software Engineer</title>
+  <meta name="description" content="Portfolio of Durgadas Karmakar - Backend Developer, DevOps Enthusiast, and Information Technology Engineer. Specialized in REST APIs, scalable backend systems, database architecture, and cloud deployment.">
+  <meta name="keywords" content="Durgadas Karmakar, Backend Developer, DevOps, REST API, Docker, Java, Python, SQL, Rescuen, Software Engineer, Database Systems">
+  <meta name="author" content="Durgadas Karmakar">
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%200%20100%20100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-theme="day" data-weather="summer">
+
+  <!-- Fixed Crisp Anime Room Backdrop & Panoramic Window -->
+  <div class="scenic-backdrop" id="scenic-backdrop" aria-hidden="true">
+    <div class="room-layer layer-dawn" id="layer-dawn"></div>
+    <div class="room-layer layer-day active" id="layer-day"></div>
+    <div class="room-layer layer-evening" id="layer-evening"></div>
+    <div class="room-layer layer-night" id="layer-night"></div>
+    
+    <!-- Dynamic Environmental Tint Overlay based on weather & time -->
+    <div class="weather-tint-overlay" id="weather-tint-overlay"></div>
+
+    <!-- Weather Canvas for rain streaks, droplets on glass, lightning, snow, sakura petals, sky elements -->
+    <canvas id="weather-canvas" class="weather-canvas"></canvas>
+    
+    <!-- Atmospheric Lightning Flash -->
+    <div class="lightning-flash" id="lightning-flash"></div>
+
+    <!-- Crystal Clear Subtle Ambient Lighting Vignette -->
+    <div class="ambient-room-vignette"></div>
+  </div>
+
+  <!-- Top Global Navigation Bar -->
+  <header class="top-navbar" id="top-navbar">
+    <div class="nav-container">
+      <div class="brand-identity">
+        <a href="#hero" class="brand-link" id="brand-logo">
+          <div class="brand-avatar-wrap">
+            <img src="assets/durgadas_avatar.jpg" alt="Durgadas Karmakar" class="brand-avatar-img">
+          </div>
+          <div class="brand-text-group">
+            <span class="brand-name">Durgadas Karmakar</span>
+            <span class="brand-role">Backend Developer &bull; DevOps Enthusiast</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Center Nav Links without numbers -->
+      <nav class="nav-menu" id="nav-menu" aria-label="Main Navigation">
+        <a href="#hero" class="nav-item active" data-section="0">Home</a>
+        <a href="#about" class="nav-item" data-section="1">About</a>
+        <a href="#skills" class="nav-item" data-section="2">Skills</a>
+        <a href="#experience" class="nav-item" data-section="3">Experience</a>
+        <a href="#projects" class="nav-item" data-section="4">Projects</a>
+        <a href="#certificates" class="nav-item" data-section="5">Certifications</a>
+        <a href="#contact" class="nav-item" data-section="6">Contact</a>
+      </nav>
+
+      <!-- Right Utility Controls -->
+      <div class="nav-actions">
+        <!-- Live Time & Day/Night Indicator -->
+        <div class="time-widget" id="time-widget" title="Syncs with system clock. Click to cycle Dawn / Day / Evening / Night">
+          <span class="time-mode-icon" id="time-mode-icon">☀️</span>
+          <span class="live-clock" id="live-clock">12:00</span>
+          <button class="cycle-time-btn" id="cycle-time-btn" title="Cycle Dawn / Day / Evening / Night" aria-label="Toggle Lighting Mode">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Weather Control Button -->
+        <button class="weather-control-btn" id="weather-control-btn" aria-label="Change Weather">
+          <span class="weather-btn-icon" id="weather-btn-icon">☀️</span>
+          <span class="weather-btn-label">Weather: <strong id="weather-label-text">Summer</strong></span>
+          <span class="weather-pulse-dot"></span>
+        </button>
+
+        <!-- Mobile Menu Toggle Button -->
+        <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Floating Scroll-to-Top Button -->
+  <a href="#hero" class="scroll-top-btn" id="scroll-top-btn" title="Back to Top" aria-label="Back to Top">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5">
+      <polyline points="18 15 12 9 6 15"></polyline>
+    </svg>
+  </a>
+
+  <!-- Funny Weather Toast Notification -->
+  <div class="funny-weather-toast" id="funny-weather-toast" role="alert" aria-live="polite">
+    <div class="toast-icon" id="toast-icon">☀️</div>
+    <div class="toast-content">
+      <div class="toast-title" id="toast-title">Weather Changed!</div>
+      <div class="toast-quote" id="toast-quote">&ldquo;Summer Sunshine: Warm coffee, 0 server downtime, and pure coding momentum.&rdquo;</div>
+    </div>
+    <button class="toast-close" id="toast-close" aria-label="Close Notification">&times;</button>
+  </div>
+
+  <!-- MAIN SCROLLABLE CONTENT (Natural, Flowing Page Layout) -->
+  <main class="page-content" id="page-content">
+
+    <!-- ========================================================
+         SECTION 1: HERO SECTION (OVERVIEW)
+         ======================================================== -->
+    <section class="content-section hero-section" id="hero" data-section-index="0" aria-label="Hero">
+      <div class="section-inner">
+        <div class="modern-card hero-card">
+          
+          <div class="card-top-pill">
+            <span class="status-indicator-dot"></span>
+            <span class="status-indicator-text">Available for Backend &amp; DevOps Roles</span>
+            <span class="pill-divider">&bull;</span>
+            <span class="pill-badge" id="realtime-status-pill">Open to High-Impact Teams</span>
+          </div>
+
+          <div class="hero-content-split">
+            <div class="hero-text-col">
+              <div class="hero-identity-row">
+                <div class="hero-avatar-card">
+                  <div class="avatar-ring-glow">
+                    <img src="assets/durgadas_avatar.jpg" alt="Durgadas Karmakar" class="hero-profile-avatar">
+                    <span class="hero-status-dot" title="Available for backend &amp; DevOps engineering"></span>
+                  </div>
+                </div>
+                <div class="hero-name-group">
+                  <span class="hero-salutation">Hello, I am</span>
+                  <h1 class="hero-name" id="main-hero-name">Durgadas Karmakar</h1>
+                </div>
+              </div>
+              
+              <div class="hero-headline-wrapper">
+                <span class="headline-badge">Specialization</span>
+                <p class="hero-headline">Backend Developer <span class="accent-sep">&bull;</span> DevOps Enthusiast <span class="accent-sep">&bull;</span> IT Engineer</p>
+              </div>
+
+              <blockquote class="hero-elevator-pitch">
+                &ldquo;Backend Developer dedicated to engineering high-throughput <strong>RESTful APIs</strong>, scalable relational database architectures, and automated <strong>DevOps deployment pipelines</strong>. Proven track record building and deploying production apps like Rescuen and robust enterprise DBMS platforms.&rdquo;
+              </blockquote>
+
+              <div class="hero-cta-group">
+                <button class="btn btn-primary" id="btn-download-cv">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                  </svg>
+                  <span>Download CV</span>
+                </button>
+                <a href="#projects" class="btn btn-secondary" id="btn-hero-contact">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="16 18 22 12 16 6"></polyline>
+                    <polyline points="8 6 2 12 8 18"></polyline>
+                  </svg>
+                  <span>View Projects</span>
+                </a>
+                <a href="https://www.linkedin.com/in/durgadas-karmakar-60ab70429" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-icon-only" title="LinkedIn Profile" aria-label="LinkedIn Profile">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                  </svg>
+                </a>
+                <a href="https://github.com/durgadas-karmakar07" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-icon-only" title="GitHub Profile" aria-label="GitHub Profile">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
+
+            <!-- Quick Metrics Grid -->
+            <div class="hero-stats-col">
+              <div class="metric-box stat-glow-blue">
+                <div class="stat-icon-wrap">⚙️</div>
+                <div class="stat-info">
+                  <span class="stat-title">Backend &amp; DevOps</span>
+                  <span class="stat-sub">REST APIs &bull; Docker &bull; CI/CD</span>
+                </div>
+              </div>
+              
+              <div class="metric-box stat-glow-amber">
+                <div class="stat-icon-wrap">🎓</div>
+                <div class="stat-info">
+                  <span class="stat-title">B.Tech in IT</span>
+                  <span class="stat-sub">Bengal College of Engg.</span>
+                </div>
+              </div>
+
+              <div class="metric-box stat-glow-emerald">
+                <div class="stat-icon-wrap">📍</div>
+                <div class="stat-info">
+                  <span class="stat-title">Raghunathpur</span>
+                  <span class="stat-sub">West Bengal, India</span>
+                </div>
+              </div>
+
+              <div class="metric-box stat-glow-purple">
+                <div class="stat-icon-wrap">📱</div>
+                <div class="stat-info">
+                  <span class="stat-title">Direct Line</span>
+                  <span class="stat-sub">+91 9635297320</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         SECTION 2: ABOUT ME (THE NARRATIVE)
+         ======================================================== -->
+    <section class="content-section" id="about" data-section-index="1" aria-label="About Me">
+      <div class="section-inner">
+        <div class="modern-card">
+          
+          <div class="section-header">
+            <div class="header-pre-tag">Narrative &amp; Engineering Focus</div>
+            <h2 class="section-title">About Me</h2>
+            <p class="section-subtext">Combining core computer science rigor with server-side architecture and automated delivery.</p>
+          </div>
+
+          <div class="about-grid">
+            <!-- Narrative Column -->
+            <div class="about-narrative-card">
+              <div class="narrative-badge">
+                <span class="narrative-icon">🎯</span>
+                <span>Professional Core</span>
+              </div>
+              
+              <div class="narrative-point">
+                <div class="point-header">
+                  <span class="point-tag status-active">Current Status</span>
+                </div>
+                <p class="point-desc">
+                  <strong>Pursuing B.Tech in Information Technology</strong> at Bengal College of Engineering &amp; Technology. Specializing in high-performance server architectures, robust REST APIs, normalized database designs, and automated software deployment.
+                </p>
+              </div>
+
+              <div class="narrative-point">
+                <div class="point-header">
+                  <span class="point-tag mindset-tag">Engineering Mindset</span>
+                </div>
+                <p class="point-desc">
+                  I specialize in <strong>backend engineering and DevOps automation</strong>. I build scalable microservices, optimize complex relational queries, design clean RESTful endpoints, and automate CI/CD delivery pipelines using Docker and modern cloud tooling.
+                </p>
+              </div>
+
+              <div class="pillars-row">
+                <div class="mini-pillar">
+                  <span class="pillar-emoji">⚡</span>
+                  <span class="pillar-title">REST APIs</span>
+                  <span class="pillar-sub">Low-latency endpoints &amp; auth</span>
+                </div>
+                <div class="mini-pillar">
+                  <span class="pillar-emoji">🐳</span>
+                  <span class="pillar-title">DevOps &amp; Cloud</span>
+                  <span class="pillar-sub">Docker, CI/CD &amp; Linux hosting</span>
+                </div>
+                <div class="mini-pillar">
+                  <span class="pillar-emoji">🗄️</span>
+                  <span class="pillar-title">DBMS &amp; SQL</span>
+                  <span class="pillar-sub">Schema design &amp; query optimization</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Education Timeline Column -->
+            <div class="education-timeline-card">
+              <div class="timeline-header">
+                <span class="timeline-header-icon">🎓</span>
+                <h3>Education Timeline</h3>
+              </div>
+
+              <div class="timeline-tree">
+                <!-- Timeline Item 1 -->
+                <div class="timeline-node active-node">
+                  <div class="node-marker">
+                    <span class="marker-dot"></span>
+                    <span class="marker-line"></span>
+                  </div>
+                  <div class="node-content">
+                    <div class="node-badge-row">
+                      <span class="node-badge current-badge">Current &bull; In Progress</span>
+                      <span class="node-year">2023 &ndash; Present</span>
+                    </div>
+                    <h4 class="node-title">B.Tech in Information Technology</h4>
+                    <div class="node-institute">Bengal College of Engineering &amp; Technology</div>
+                    <p class="node-details">
+                      Specializing in core computer science, software engineering pipelines, database management systems, and backend server architectures.
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Timeline Item 2 -->
+                <div class="timeline-node">
+                  <div class="node-marker">
+                    <span class="marker-dot"></span>
+                  </div>
+                  <div class="node-content">
+                    <div class="node-badge-row">
+                      <span class="node-badge completed-badge">Completed</span>
+                      <span class="node-year">2023</span>
+                    </div>
+                    <h4 class="node-title">Higher Secondary Education</h4>
+                    <div class="node-institute">Raghunathpur, West Bengal</div>
+                    <p class="node-details">
+                      Graduated with strong foundations in science, analytical problem solving, and computational mathematics.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="timeline-footer-note">
+                <span>📍 Location: Raghunathpur, West Bengal, India</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         SECTION 3: TECHNICAL SKILLS & ENGINEERING ARSENAL
+         ======================================================== -->
+    <section class="content-section" id="skills" data-section-index="2" aria-label="Skills">
+      <div class="section-inner">
+        <div class="modern-card">
+          
+          <div class="section-header">
+            <div class="header-pre-tag">Tech &amp; Engineering Arsenal</div>
+            <h2 class="section-title">Technical Skills &amp; Stack</h2>
+            <p class="section-subtext">Categorized for fast recruiter scanning and engineering evaluation.</p>
+          </div>
+
+          <div class="skills-category-grid">
+            
+            <!-- Category 1: Backend & REST APIs -->
+            <div class="skill-category-card" data-category="backend">
+              <div class="category-header">
+                <div class="category-icon-box cat-blue">⚡</div>
+                <div class="category-title-wrap">
+                  <h3 class="category-title">Backend &amp; REST APIs</h3>
+                  <span class="category-count">5 Core Technologies</span>
+                </div>
+              </div>
+              <div class="skills-pill-list">
+                <div class="skill-item-chip">
+                  <span class="chip-name">RESTful API Design</span>
+                  <span class="chip-level">Microservices</span>
+                </div>
+                <div class="skill-item-chip">
+                  <span class="chip-name">JWT Auth &amp; Security</span>
+                  <span class="chip-level">RBAC &amp; Tokens</span>
+                </div>
+                <div class="skill-item-chip">
+                  <span class="chip-name">Microservices Architecture</span>
+                  <span class="chip-level">Distributed</span>
+                </div>
+                <div class="skill-item-chip">
+                  <span class="chip-name">WebSocket Telemetry</span>
+                  <span class="chip-level">Real-Time</span>
+                </div>
+                <div class="skill-item-chip">
+                  <span class="chip-name">Postman API Testing</span>
+                  <span class="chip-level">Testing &amp; CI</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Category 2: Programming Languages -->
+            <div class="skill-category-card" data-category="languages">
+              <div class="category-header">
+                <div class="category-icon-box cat-green">💻</div>
+                <div class="category-title-wrap">
+                  <h3 class="category-title">Programming Languages</h3>
+                  <span class="category-count">6 Core Languages</span>
+                </div>
+              </div>
+              <div class="skills-pill-list">
+                <div class="skill-item-chip">
+                  <span class="chip-name">Java</span>
+                  <span class="chip-level">Advanced Backend</span>
+                </div>
+                <div class="skill-item-chip">
+                  <span class="chip-name">Python</span>
+                  <span class="chip-level">AI &amp; Scripting</span>
+                </div>
+                <div class="skill-item-chip">
+                  <span class="chip-name">C</span>
+                  <span class="chip-level">Systems &amp; Memory</span>
+                </div>
+                <div class="skill-item-chip">
+                  <span class="chip-name">C++</span>
+                  <span class="chip-level">DSA &amp; OOP</span>
+                </div>
+                <div class="skill-item-chip">
+                  <span class="chip-name">JavaScript (Node.js)</span>
+                  <span class="chip-level">Fullstack / Server</span>
+                </div>
+                <div class="skill-item-chip">
+                  <span class="chip-name">SQL</span>
+                  <span class="chip-level">Database Queries</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Category 3: DevOps, Cloud & Tools -->
+            <div class="skill-category-card" data-category="devops">
+              <div class="category-header">
+                <div class="category-icon-box cat-amber">🐳</div>
+                <div class="category-title-wrap">
+                  <h3 class="category-title">DevOps, Cloud &amp; Tools</h3>
+                  <span class="category-count">6 Platforms</span>
+                </div>
+              </div>
+              <div class="skills-pill-list">
+                <div class="skill-item-chip">
+                  <span class="chip-name">Docker</span>
+                  <span class="chip-level">Containerization</span>
+                </div>
+                <div class="skill-item-chip">
+                  <span class="chip-name">CI/CD Pipelines</span>
+                  <span class="chip-level">GitHub Actions</span>
+                </div>
+                <div class="skill-item-chip">
+                  <span class="chip-name">Git &amp; GitHub</span>
+                  <span class="chip-level">Version Control</span>
+                </div>
+                <div class="skill-item-chip">
+                  <span class="chip-name">Linux &amp; Shell</span>
+                  <span class="chip-level">Server Admin</span>
+                </div>
+                <div class="skill-item-chip">
+                  <span class="chip-name">AWS Cloud Services</span>
+                  <span class="chip-level">Cloud Deployment</span>
+                </div>
+                <div class="skill-item-chip">
+                  <span class="chip-name">Firebase &amp; Supabase</span>
+                  <span class="chip-level">Real-Time Cloud</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Category 4: DBMS & Core Computer Science -->
+            <div class="skill-category-card" data-category="dbms">
+              <div class="category-header">
+                <div class="category-icon-box cat-purple">🗄️</div>
+                <div class="category-title-wrap">
+                  <h3 class="category-title">DBMS &amp; Core CS</h3>
+                  <span class="category-count">6 Disciplines</span>
+                </div>
+              </div>
+              <div class="skills-pill-list">
+                <div class="skill-item-chip">
+                  <span class="chip-name">PostgreSQL</span>
+                  <span class="chip-level">Relational Database</span>
+                </div>
+                <div class="skill-item-chip">
+                  <span class="chip-name">MySQL</span>
+                  <span class="chip-level">Schema Design</span>
+                </div>
+                <div class="skill-item-chip">
+                  <span class="chip-name">Query Optimization &amp; Indexing</span>
+                  <span class="chip-level">Performance</span>
+                </div>
+                <div class="skill-item-chip">
+                  <span class="chip-name">Data Structures &amp; Algorithms</span>
+                  <span class="chip-level">Problem Solving</span>
+                </div>
+                <div class="skill-item-chip">
+                  <span class="chip-name">Artificial Intelligence (AI/ML)</span>
+                  <span class="chip-level">Vision &amp; Models</span>
+                </div>
+                <div class="skill-item-chip">
+                  <span class="chip-name">System Architecture</span>
+                  <span class="chip-level">Scalability</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         SECTION 4: WORK EXPERIENCE & INTERNSHIPS
+         ======================================================== -->
+    <section class="content-section" id="experience" data-section-index="3" aria-label="Work Experience">
+      <div class="section-inner">
+        <div class="modern-card">
+          
+          <div class="section-header">
+            <div class="header-pre-tag">Professional Track Record &amp; Industry Roles</div>
+            <h2 class="section-title">Work Experience &amp; Internships</h2>
+            <p class="section-subtext">Backend architecture, real-time event systems, automated cloud deployment, and applied machine learning.</p>
+          </div>
+
+          <div class="experience-timeline">
+            
+            <!-- Entry 1: Rescuen -->
+            <div class="experience-card active-venture">
+              <div class="exp-left-bar">
+                <div class="exp-badge-period">Oct 2025 &ndash; Mar 2026</div>
+                <div class="exp-venture-tag">Production Project</div>
+              </div>
+
+              <div class="exp-main-body">
+                <div class="exp-role-row">
+                  <div class="role-icon">🚨</div>
+                  <div class="role-meta">
+                    <h3 class="role-title">Backend &amp; Cloud Architect</h3>
+                    <h4 class="company-name">Rescuen (Emergency Alert Platform)</h4>
+                  </div>
+                  <div class="role-tag-pill">Backend &amp; DevOps</div>
+                </div>
+
+                <div class="exp-impact-box">
+                  <div class="impact-label">Core Engineering Deliverables &amp; Architectural Wins:</div>
+                  <ul class="impact-bullets">
+                    <li>Designed and implemented high-concurrency RESTful API endpoints and WebSocket telemetry channels for sub-second emergency response routing.</li>
+                    <li>Built resilient fallback mechanisms including offline SMS trigger pipelines and secure authentication with JWT and bcrypt password hashing.</li>
+                    <li>Structured relational database schemas in PostgreSQL with geospatial indexing (PostGIS) to locate nearest responders and emergency facilities within milliseconds.</li>
+                    <li>Configured automated container builds and deployments using Docker and GitHub Actions CI/CD workflows, achieving 99.9% uptime.</li>
+                  </ul>
+                </div>
+
+                <div class="exp-tech-tags">
+                  <span class="tech-tag">REST APIs</span>
+                  <span class="tech-tag">WebSockets</span>
+                  <span class="tech-tag">Docker</span>
+                  <span class="tech-tag">PostgreSQL</span>
+                  <span class="tech-tag">CI/CD</span>
+                  <span class="tech-tag">Geospatial Indexing</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Entry 2: EDU TANTR -->
+            <div class="experience-card">
+              <div class="exp-left-bar">
+                <div class="exp-badge-period">Aug 2025 &ndash; Oct 2025</div>
+                <div class="exp-venture-tag past-venture">Internship</div>
+              </div>
+
+              <div class="exp-main-body">
+                <div class="exp-role-row">
+                  <div class="role-icon">🤖</div>
+                  <div class="role-meta">
+                    <h3 class="role-title">Artificial Intelligence Intern</h3>
+                    <h4 class="company-name">EDU TANTR</h4>
+                  </div>
+                  <div class="role-tag-pill">AI &amp; Research</div>
+                </div>
+
+                <div class="exp-impact-box">
+                  <div class="impact-label">Key Impact &amp; Contributions:</div>
+                  <p class="impact-text">
+                    <strong>Gained practical exposure</strong> to AI engineering principles, deep learning frameworks, and computer vision technologies.
+                  </p>
+                  <ul class="impact-bullets">
+                    <li>Constructed and evaluated deep neural network models for predictive image classification and feature extraction.</li>
+                    <li>Integrated computer vision pipelines into practical software workflows to automate recognition tasks.</li>
+                    <li>Collaborated in agile sprint reviews, code documentation, and model performance benchmarking.</li>
+                  </ul>
+                </div>
+
+                <div class="exp-tech-tags">
+                  <span class="tech-tag">Deep Learning</span>
+                  <span class="tech-tag">Computer Vision</span>
+                  <span class="tech-tag">Python &amp; ML</span>
+                  <span class="tech-tag">Data Engineering</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         SECTION 5: KEY PROJECTS (STAR FORMAT)
+         ======================================================== -->
+    <section class="content-section" id="projects" data-section-index="4" aria-label="Key Projects">
+      <div class="section-inner">
+        <div class="modern-card">
+          
+          <div class="section-header">
+            <div class="header-pre-tag">The Core Engine</div>
+            <h2 class="section-title">Key Projects</h2>
+            <p class="section-subtext">Structured in STAR (Situation, Task, Action, Result) methodology with verifiable tech stacks.</p>
+          </div>
+
+          <div class="projects-grid">
+            
+            <!-- Project 1: Rescuen -->
+            <div class="project-star-card">
+              <div class="project-header">
+                <div class="project-title-group">
+                  <span class="project-category-badge badge-red">Safety &bull; Backend &amp; Mobile</span>
+                  <h3 class="project-name">Rescuen</h3>
+                  <div class="project-subtitle">Real-Time Emergency Safety &amp; Dispatch Platform</div>
+                </div>
+                <div class="project-stack-icons">
+                  <span class="stack-badge">REST APIs</span>
+                  <span class="stack-badge">Docker</span>
+                  <span class="stack-badge">WebSockets</span>
+                  <span class="stack-badge">PostgreSQL</span>
+                </div>
+              </div>
+
+              <!-- STAR Breakdown -->
+              <div class="star-accordion">
+                <div class="star-item">
+                  <span class="star-label star-s">S &amp; T</span>
+                  <div class="star-body">
+                    <strong>Situation &amp; Task:</strong> In high-stress personal safety emergencies, users need sub-second SOS broadcasts with live geospatial coordinates without failure or high latency.
+                  </div>
+                </div>
+                <div class="star-item">
+                  <span class="star-label star-a">Action</span>
+                  <div class="star-body">
+                    <strong>Action:</strong> Engineered high-performance backend microservices with real-time WebSocket telemetry, JWT secured endpoints, automated SMS gateways for network dropouts, and PostGIS location indexing.
+                  </div>
+                </div>
+                <div class="star-item">
+                  <span class="star-label star-r">Result</span>
+                  <div class="star-body">
+                    <strong>Result:</strong> Successfully launched live on the Google Play Store with low response latency, zero server crashes during stress tests, and automated continuous deployment.
+                  </div>
+                </div>
+              </div>
+
+              <div class="project-card-footer">
+                <div class="project-links">
+                  <a href="https://play.google.com/store/apps/details?id=com.officialrescuen.app" target="_blank" rel="noopener noreferrer" class="btn-proj btn-proj-demo">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                      <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                    Google Play
+                  </a>
+                  <a href="https://github.com/durgadas-karmakar07/RESCUEN" target="_blank" rel="noopener noreferrer" class="btn-proj btn-proj-code">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+                    </svg>
+                    GitHub Repo
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Project 2: Multilayer Online Exam System -->
+            <div class="project-star-card">
+              <div class="project-header">
+                <div class="project-title-group">
+                  <span class="project-category-badge badge-green">DBMS &bull; Web Platform</span>
+                  <h3 class="project-name">Multilayer Online Exam System</h3>
+                  <div class="project-subtitle">Academic Assessment &amp; Evaluation Engine</div>
+                </div>
+                <div class="project-stack-icons">
+                  <span class="stack-badge">JavaScript</span>
+                  <span class="stack-badge">SQL / DBMS</span>
+                  <span class="stack-badge">HTML5 / CSS3</span>
+                  <span class="stack-badge">Netlify</span>
+                </div>
+              </div>
+
+              <!-- STAR Breakdown -->
+              <div class="star-accordion">
+                <div class="star-item">
+                  <span class="star-label star-s">S &amp; T</span>
+                  <div class="star-body">
+                    <strong>Situation &amp; Task:</strong> Academic institutions struggle with secure evaluation workflows and role-based test administration during high-volume remote testing.
+                  </div>
+                </div>
+                <div class="star-item">
+                  <span class="star-label star-a">Action</span>
+                  <div class="star-body">
+                    <strong>Action:</strong> Implemented a multi-tier assessment portal with distinct access boundaries for admins, evaluators, and students, complete with automated grading logic and real-time timer integrity.
+                  </div>
+                </div>
+                <div class="star-item">
+                  <span class="star-label star-r">Result</span>
+                  <div class="star-body">
+                    <strong>Result:</strong> Deployed live on Netlify, enabling seamless exam generation, automated score computation, and reliable assessment auditing.
+                  </div>
+                </div>
+              </div>
+
+              <div class="project-card-footer">
+                <div class="project-links">
+                  <a href="https://online-examination-system-dk.netlify.app/" target="_blank" rel="noopener noreferrer" class="btn-proj btn-proj-demo">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/>
+                    </svg>
+                    Live Demo
+                  </a>
+                  <a href="https://github.com/durgadas-karmakar07" target="_blank" rel="noopener noreferrer" class="btn-proj btn-proj-code">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+                    </svg>
+                    GitHub Repo
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         SECTION 6: CERTIFICATES & ACHIEVEMENTS WALL
+         ======================================================== -->
+    <section class="content-section" id="certificates" data-section-index="5" aria-label="Certificates Wall">
+      <div class="section-inner">
+        <div class="modern-card">
+          
+          <div class="section-header">
+            <div class="header-pre-tag">Verified Credentials</div>
+            <h2 class="section-title">Certificates &amp; Achievements Wall</h2>
+            <p class="section-subtext">Continuous learning validated with official credentials and identity consistency.</p>
+          </div>
+
+          <!-- Professional Verification Callout Notice -->
+          <div class="cert-compliance-alert">
+            <div class="alert-icon-wrap">🛡️</div>
+            <div class="alert-content">
+              <strong>Official Identity Verification Standard:</strong>
+              <span>All displayed credentials consistently reflect the official professional name <strong>Durgadas Karmakar</strong> for background checks, ATS verification, and corporate onboarding.</span>
+            </div>
+            <span class="compliance-badge">100% Verified</span>
+          </div>
+
+          <!-- Certificates Grid -->
+          <div class="certificates-grid">
+            
+            <!-- Cert 1: Oracle Generative AI -->
+            <div class="cert-display-card" data-cert="oracle-genai">
+              <div class="cert-card-header">
+                <div class="cert-issuer-badge">Oracle University &bull; Cloud AI</div>
+                <div class="cert-verified-tick" title="Verified Credential">✓ Verified</div>
+              </div>
+              <div class="cert-preview-img-wrap">
+                <img src="assets/certificates/Oracal.png" alt="Oracle Certified Generative AI Professional Certificate" class="cert-thumbnail" loading="lazy">
+              </div>
+              <div class="cert-body">
+                <h3 class="cert-title">Oracle Cloud Infrastructure 2025 Certified Generative AI Professional</h3>
+                <div class="cert-recipient">Issued to: <strong>Durgadas Karmakar</strong></div>
+                <p class="cert-description">
+                  Official credential verifying proficiency in LLMs, Prompt Engineering, Fine-tuning, RAG architecture, and OCI Generative AI service deployment.
+                </p>
+              </div>
+              <div class="cert-footer">
+                <span class="cert-id">ID: 102213768OCI25GAIOCP</span>
+                <button class="btn-cert-view" data-cert-img="assets/certificates/Oracal.png" data-cert-name="Oracle Cloud Infrastructure 2025 Generative AI Professional" data-cert-issuer="Oracle University" data-cert-id="102213768OCI25GAIOCP">View Certificate</button>
+              </div>
+            </div>
+
+            <!-- Cert 2: EDU TANTR AI Internship -->
+            <div class="cert-display-card" data-cert="edutantr-internship">
+              <div class="cert-card-header">
+                <div class="cert-issuer-badge">EDU TANTR &bull; AI Lab</div>
+                <div class="cert-verified-tick" title="Verified Credential">✓ Verified</div>
+              </div>
+              <div class="cert-preview-img-wrap">
+                <img src="assets/certificates/Edu tantr 2.jpeg" alt="EDU TANTR AI Internship Certificate" class="cert-thumbnail" loading="lazy">
+              </div>
+              <div class="cert-body">
+                <h3 class="cert-title">Artificial Intelligence Internship Completion</h3>
+                <div class="cert-recipient">Issued to: <strong>Durgadas Karmakar</strong></div>
+                <p class="cert-description">
+                  Official internship completion validating hands-on engineering in Deep Learning, Computer Vision pipelines, and intelligent system architectures.
+                </p>
+              </div>
+              <div class="cert-footer">
+                <span class="cert-id">Ref: ET/2025/10/41</span>
+                <button class="btn-cert-view" data-cert-img="assets/certificates/Edu tantr 2.jpeg" data-cert-name="Artificial Intelligence Internship Completion" data-cert-issuer="EDU TANTR" data-cert-id="ET/2025/10/41">View Certificate</button>
+              </div>
+            </div>
+
+            <!-- Cert 3: EDU TANTR LOR -->
+            <div class="cert-display-card" data-cert="edutantr-lor">
+              <div class="cert-card-header">
+                <div class="cert-issuer-badge">EDU TANTR &bull; Recommendation</div>
+                <div class="cert-verified-tick" title="Verified Credential">✓ Verified</div>
+              </div>
+              <div class="cert-preview-img-wrap">
+                <img src="assets/certificates/Eud tantr 1.jpeg" alt="EDU TANTR Letter of Recommendation" class="cert-thumbnail" loading="lazy">
+              </div>
+              <div class="cert-body">
+                <h3 class="cert-title">Letter of Recommendation (Artificial Intelligence)</h3>
+                <div class="cert-recipient">Issued to: <strong>Durgadas Karmakar</strong></div>
+                <p class="cert-description">
+                  Formal commendation highlighting problem-solving ability, rapid learning curve, teamwork, and practical model deployment during the internship.
+                </p>
+              </div>
+              <div class="cert-footer">
+                <span class="cert-id">Ref: ET/2025/10/LOR-41</span>
+                <button class="btn-cert-view" data-cert-img="assets/certificates/Eud tantr 1.jpeg" data-cert-name="Letter of Recommendation - AI" data-cert-issuer="EDU TANTR" data-cert-id="ET/2025/10/LOR-41">View Certificate</button>
+              </div>
+            </div>
+
+            <!-- Cert 4: Cursa Java -->
+            <div class="cert-display-card" data-cert="cursa-java">
+              <div class="cert-card-header">
+                <div class="cert-issuer-badge">Cursa &bull; Software Development</div>
+                <div class="cert-verified-tick" title="Verified Credential">✓ Verified</div>
+              </div>
+              <div class="cert-preview-img-wrap">
+                <img src="assets/certificates/cursa1.jpeg" alt="Cursa Java Certificate" class="cert-thumbnail" loading="lazy">
+              </div>
+              <div class="cert-body">
+                <h3 class="cert-title">Java Programming Certification</h3>
+                <div class="cert-recipient">Issued to: <strong>Durgadas Karmakar</strong></div>
+                <p class="cert-description">
+                  Comprehensive training in core Java, object-oriented design, multithreading, collections framework, and backend server development.
+                </p>
+              </div>
+              <div class="cert-footer">
+                <span class="cert-id">Code: 36ff8a02a8</span>
+                <button class="btn-cert-view" data-cert-img="assets/certificates/cursa1.jpeg" data-cert-name="Java Programming Certification" data-cert-issuer="Cursa" data-cert-id="36ff8a02a8">View Certificate</button>
+              </div>
+            </div>
+
+            <!-- Cert 5: Cursa Python -->
+            <div class="cert-display-card" data-cert="cursa-python">
+              <div class="cert-card-header">
+                <div class="cert-issuer-badge">Cursa &bull; Programming</div>
+                <div class="cert-verified-tick" title="Verified Credential">✓ Verified</div>
+              </div>
+              <div class="cert-preview-img-wrap">
+                <img src="assets/certificates/Cursa2.jpeg" alt="Cursa Python Certificate" class="cert-thumbnail" loading="lazy">
+              </div>
+              <div class="cert-body">
+                <h3 class="cert-title">Python Programming Certification</h3>
+                <div class="cert-recipient">Issued to: <strong>Durgadas Karmakar</strong></div>
+                <p class="cert-description">
+                  Mastery in Python syntax, automated scripting, data processing pipelines, backend endpoints, and algorithmic logic.
+                </p>
+              </div>
+              <div class="cert-footer">
+                <span class="cert-id">Code: ba5b8e9990</span>
+                <button class="btn-cert-view" data-cert-img="assets/certificates/Cursa2.jpeg" data-cert-name="Python Programming Certification" data-cert-issuer="Cursa" data-cert-id="ba5b8e9990">View Certificate</button>
+              </div>
+            </div>
+
+            <!-- Cert 6: Cursa C and C++ -->
+            <div class="cert-display-card" data-cert="cursa-cpp">
+              <div class="cert-card-header">
+                <div class="cert-issuer-badge">Cursa &bull; Systems Programming</div>
+                <div class="cert-verified-tick" title="Verified Credential">✓ Verified</div>
+              </div>
+              <div class="cert-preview-img-wrap">
+                <img src="assets/certificates/Cursa3.jpeg" alt="Cursa C and C++ Certificate" class="cert-thumbnail" loading="lazy">
+              </div>
+              <div class="cert-body">
+                <h3 class="cert-title">C and C++ Systems Programming</h3>
+                <div class="cert-recipient">Issued to: <strong>Durgadas Karmakar</strong></div>
+                <p class="cert-description">
+                  In-depth foundational curriculum covering memory management, pointer arithmetic, algorithms, data structures, and procedural systems programming.
+                </p>
+              </div>
+              <div class="cert-footer">
+                <span class="cert-id">Code: df567885b0</span>
+                <button class="btn-cert-view" data-cert-img="assets/certificates/Cursa3.jpeg" data-cert-name="C &amp; C++ Systems Programming" data-cert-issuer="Cursa" data-cert-id="df567885b0">View Certificate</button>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         SECTION 7: CONTACT & FOOTER
+         ======================================================== -->
+    <section class="content-section" id="contact" data-section-index="6" aria-label="Contact">
+      <div class="section-inner">
+        <div class="modern-card">
+          
+          <div class="section-header">
+            <div class="header-pre-tag">Get In Touch</div>
+            <h2 class="section-title">Let&rsquo;s Build Something Resilient</h2>
+            <p class="section-subtext">Open to backend engineering, DevOps automation, cloud architecture roles, and high-impact software projects.</p>
+          </div>
+
+          <div class="contact-layout-grid">
+            
+            <!-- Direct Info Panel -->
+            <div class="contact-info-panel">
+              <div class="contact-card-header">
+                <h3>Direct Contact Coordinates</h3>
+                <p>Reach out directly for engineering roles, technical collaboration, or architecture inquiries.</p>
+              </div>
+
+              <div class="contact-channel-list">
+                <!-- Phone -->
+                <a href="tel:+919635297320" class="contact-channel-item">
+                  <div class="channel-icon-box">📞</div>
+                  <div class="channel-details">
+                    <span class="channel-label">Phone / WhatsApp</span>
+                    <span class="channel-val">+91 9635297320</span>
+                  </div>
+                </a>
+
+                <!-- Email -->
+                <a href="mailto:durgadask96@gmail.com" class="contact-channel-item">
+                  <div class="channel-icon-box">✉️</div>
+                  <div class="channel-details">
+                    <span class="channel-label">Primary Email</span>
+                    <span class="channel-val">durgadask96@gmail.com</span>
+                  </div>
+                </a>
+
+                <!-- Location -->
+                <div class="contact-channel-item static-item">
+                  <div class="channel-icon-box">📍</div>
+                  <div class="channel-details">
+                    <span class="channel-label">Location / Relocation</span>
+                    <span class="channel-val">Raghunathpur, West Bengal, India (Open to Remote &amp; Hybrid)</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Social Links Row -->
+              <div class="social-channels-bar">
+                <span class="social-panel-label">Professional Profiles:</span>
+                <div class="social-btn-row">
+                  <a href="https://www.linkedin.com/in/durgadas-karmakar-60ab70429" target="_blank" rel="noopener noreferrer" class="social-link-btn" title="LinkedIn Profile">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                      <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                    </svg>
+                    <span>LinkedIn Profile</span>
+                  </a>
+                  <a href="https://github.com/durgadas-karmakar07" target="_blank" rel="noopener noreferrer" class="social-link-btn" title="GitHub Profile">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                      <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    <span>GitHub Repos</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Working Contact Form -->
+            <div class="contact-form-col">
+              <form class="contact-form" id="contact-form" novalidate>
+                <div class="form-title-row">
+                  <h3 class="form-title">Send a Direct Message</h3>
+                  <span class="form-sub-status">⚡ Responds within 12 hours</span>
+                </div>
+
+                <div class="form-group">
+                  <label for="form-name" class="form-label">Full Name <span class="req">*</span></label>
+                  <input type="text" id="form-name" name="name" class="form-input" placeholder="e.g. John Doe / Engineering Manager" required>
+                  <span class="form-error" id="name-error">Please enter your name</span>
+                </div>
+
+                <div class="form-group">
+                  <label for="form-email" class="form-label">Email Address <span class="req">*</span></label>
+                  <input type="email" id="form-email" name="email" class="form-input" placeholder="e.g. name@company.com" required>
+                  <span class="form-error" id="email-error">Please enter a valid email address</span>
+                </div>
+
+                <div class="form-group">
+                  <label for="form-subject" class="form-label">Subject / Purpose</label>
+                  <input type="text" id="form-subject" name="subject" class="form-input" placeholder="e.g. Backend Developer Role / Architecture Discussion">
+                </div>
+
+                <div class="form-group">
+                  <label for="form-message" class="form-label">Your Message <span class="req">*</span></label>
+                  <textarea id="form-message" name="message" class="form-textarea" rows="4" placeholder="Briefly describe your requirements, timelines, or role details..." required></textarea>
+                  <span class="form-error" id="message-error">Please write a brief message</span>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-submit-form" id="btn-submit-form">
+                  <span class="btn-submit-text">Send Message</span>
+                  <svg class="btn-submit-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                  </svg>
+                </button>
+
+                <!-- Status Feedback Banner -->
+                <div class="form-feedback-banner" id="form-feedback-banner" role="status" aria-live="polite"></div>
+              </form>
+            </div>
+
+          </div>
+
+          <!-- Footer Bar -->
+          <footer class="contact-footer-bar">
+            <div class="footer-left">
+              &copy; 2026 <strong>Durgadas Karmakar</strong> &bull; Backend Developer &amp; DevOps Enthusiast. All Rights Reserved.
+            </div>
+            <div class="footer-right">
+              <span>Clean Room Atmosphere &bull; Real-time Weather &amp; Day/Night Sync</span>
+            </div>
+          </footer>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================
+       MODAL 1: RESUME & CV DOCUMENT VIEWER
+       ======================================================== -->
+  <div class="app-modal" id="cv-modal" role="dialog" aria-modal="true" aria-labelledby="cv-modal-title">
+    <div class="modal-backdrop" id="cv-modal-backdrop"></div>
+    <div class="modal-dialog glass-card cv-viewer-dialog">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <span class="modal-badge badge-blue">Official Document</span>
+          <h3 class="modal-title" id="cv-modal-title">Curriculum Vitae &ndash; Durgadas Karmakar</h3>
+        </div>
+        <button class="modal-close-btn" id="btn-close-cv-modal" aria-label="Close modal">&times;</button>
+      </div>
+
+      <div class="modal-body cv-printable-sheet" id="cv-printable-sheet">
+        <div class="cv-paper">
+          <div class="cv-header">
+            <div class="cv-header-identity">
+              <img src="assets/durgadas_avatar.jpg" alt="Durgadas Karmakar" class="cv-avatar-thumb">
+              <div class="cv-header-text">
+                <h2>Durgadas Karmakar</h2>
+                <div class="cv-doc-subtitle">Backend Developer | DevOps Enthusiast | B.Tech in Information Technology</div>
+                <div class="cv-doc-contact">
+                  <span>📞 +91 9635297320</span> &bull; 
+                  <span>✉️ durgadaskarmakar.dev@gmail.com</span> &bull; 
+                  <span>📍 Raghunathpur, West Bengal, India</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr class="cv-divider">
+
+          <div class="cv-section">
+            <h3>Executive Summary</h3>
+            <p>Passionate Backend Developer &amp; Information Technology Engineer specialized in building scalable microservices, resilient RESTful APIs, and automated CI/CD deployment pipelines. Proven background designing production-grade architectures (Rescuen), optimizing PostgreSQL relational databases, and implementing cloud AI pipelines.</p>
+          </div>
+
+          <div class="cv-section">
+            <h3>Education</h3>
+            <p><strong>B.Tech in Information Technology</strong> &ndash; Bengal College of Engineering &amp; Technology (2023 &ndash; Present)</p>
+            <p><strong>Higher Secondary</strong> &ndash; Raghunathpur, West Bengal (2023)</p>
+          </div>
+
+          <div class="cv-section">
+            <h3>Experience</h3>
+            <p><strong>Backend &amp; Cloud Architect &ndash; Rescuen (Emergency Alert Platform)</strong> (Oct 2025 &ndash; Mar 2026)<br>
+            Engineered low-latency REST endpoints, WebSocket emergency channels, PostGIS spatial indexing, and automated Docker CI/CD delivery pipelines.</p>
+            <p><strong>Artificial Intelligence Intern &ndash; EDU TANTR</strong> (Aug 2025 &ndash; Oct 2025)<br>
+            Engineered deep learning models and integrated computer vision pipelines into practical software workflows.</p>
+          </div>
+
+          <div class="cv-section">
+            <h3>Technical Skills</h3>
+            <p><strong>Backend &amp; APIs:</strong> RESTful API Design, JWT Authentication, WebSockets, Microservices, Postman</p>
+            <p><strong>Languages:</strong> Java, Python, C, C++, JavaScript (Node.js), SQL</p>
+            <p><strong>DevOps &amp; Cloud:</strong> Docker, CI/CD (GitHub Actions), Git &amp; GitHub, Linux/Shell, AWS Cloud Services</p>
+            <p><strong>DBMS &amp; Systems:</strong> PostgreSQL, MySQL, Query Optimization &amp; Indexing, Data Structures &amp; Algorithms, AI/ML</p>
+          </div>
+
+          <div class="cv-section">
+            <h3>Key Projects</h3>
+            <p><strong>Rescuen:</strong> Real-Time Emergency Safety &amp; Dispatch Platform with Docker, WebSockets, and PostgreSQL.</p>
+            <p><strong>Multilayer Online Exam System:</strong> Multi-tier academic assessment and DBMS management engine.</p>
+            <p><strong>Automated Microservices CI/CD:</strong> Containerized backend gateway architecture using Docker and GitHub Actions.</p>
+          </div>
+
+          <div class="cv-section">
+            <h3>Verified Certifications</h3>
+            <p><strong>Oracle Cloud Infrastructure 2025 Generative AI Professional</strong> (Oracle University)</p>
+            <p><strong>Artificial Intelligence Internship &amp; Recommendation</strong> (EDU TANTR)</p>
+            <p><strong>Java, Python, C &amp; C++ Programming Certifications</strong> (Cursa)</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="btn-print-cv">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 6 2 18 2 18 9"></polyline>
+            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+            <rect x="6" y="14" width="12" height="8"></rect>
+          </svg>
+          Print / Save PDF
+        </button>
+        <button class="btn btn-primary" id="btn-modal-download-cv">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+          </svg>
+          Download PDF File
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       MODAL 2: CERTIFICATE DETAILS MODAL
+       ======================================================== -->
+  <div class="app-modal" id="cert-modal" role="dialog" aria-modal="true" aria-labelledby="cert-modal-title">
+    <div class="modal-backdrop" id="cert-modal-backdrop"></div>
+    <div class="modal-dialog glass-card cert-detail-dialog">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <span class="modal-badge badge-green">Verified Credential</span>
+          <h3 class="modal-title" id="cert-modal-title">Certificate Details</h3>
+        </div>
+        <button class="modal-close-btn" id="btn-close-cert-modal" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body cert-modal-content">
+        <div class="cert-modal-image-container" id="cert-modal-image-container">
+          <img src="" alt="Verified Certificate" id="cert-modal-img" class="cert-modal-image" loading="lazy">
+        </div>
+        <div class="cert-details-meta">
+          <h4 id="cert-modal-name">Certificate Name</h4>
+          <div class="cert-meta-row">
+            <span>Recipient: <strong id="cert-modal-recipient">Durgadas Karmakar</strong></span>
+            <span>Issuer: <strong id="cert-modal-issuer">Issuer Name</strong></span>
+          </div>
+          <div class="cert-id-badge" id="cert-modal-id">ID: CERT-123456</div>
+          <p class="cert-modal-desc" id="cert-modal-desc">
+            Verified official credential issued to Durgadas Karmakar for background checks, ATS verification, and professional validation.
+          </p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="btn-dismiss-cert-modal">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main JavaScript File -->
+  <script src="app.js"></script>
+</body>
+</html>
